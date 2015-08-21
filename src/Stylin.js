@@ -21,7 +21,7 @@ export default function Stylin (Component) {
       this.__removeStyles();
 
       if (!!props.style) {
-        this.__style = this.context.Style.registerStyle(props.style);
+        this.__style = this.context.Style.registerStyle({}, Component.baseStyle, props.style);
       }
     }
     
