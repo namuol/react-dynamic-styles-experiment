@@ -1,8 +1,6 @@
-import FreeStyle from 'react-free-style';
 import React, {Component, PropTypes} from 'react';
 import Button from './Button';
 
-const Style = FreeStyle.create();
 
 function count (max, mapFunc) {
   let result = [];
@@ -14,19 +12,7 @@ function count (max, mapFunc) {
   return result;
 }
 
-@FreeStyle.injectStyle(Style)
 export default class App extends Component {
-  static propTypes = {
-  };
-
-  static childContextTypes = {
-    Style: PropTypes.object.isRequired,
-  };
-
-  getChildContext () {
-    return { Style };
-  }
-
   render () {
     return (
       <div>
@@ -35,8 +21,6 @@ export default class App extends Component {
             return <Button key={idx} />
           })}
         </div>
-
-        <Style.Element />
       </div>
     )
   }

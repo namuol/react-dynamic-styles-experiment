@@ -6,6 +6,7 @@ function randomColor () {
 }
 
 const NARROW_QUERY = '@media only screen and (max-width: 800px)';
+const REALLY_NARROW_QUERY = '@media only screen and (max-width: 400px)';
 
 @Stylin
 class Button extends Component {
@@ -16,9 +17,14 @@ class Button extends Component {
     cursor: 'pointer',
     [NARROW_QUERY]: {
       margin: '5px 0',
-      padding: '15px',
+      padding: '20px',
       width: '100%',
-    }
+    },
+    [REALLY_NARROW_QUERY]: {
+      padding: '40px',
+      fontWeight: 'bold',
+      fontSize: '200%',
+    },
   };
 
   render () {
