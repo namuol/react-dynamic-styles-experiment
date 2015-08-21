@@ -1,6 +1,7 @@
 import {PropTypes, cloneElement} from 'react';
 
 export default function Stylin (Component) {
+  
   return class StylinComponent extends Component {
     static propTypes = Object.assign({
       style: PropTypes.object,

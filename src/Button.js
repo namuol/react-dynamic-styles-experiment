@@ -12,6 +12,11 @@ class Button extends Component {
     padding: '10px',
     margin: '5px',
     cursor: 'pointer',
+    '@media only screen and (max-width: 800px)': {
+      margin: '5px 0',
+      padding: '15px',
+      width: '100%',
+    }
   };
 
   render () {
