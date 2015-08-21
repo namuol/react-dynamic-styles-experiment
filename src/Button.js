@@ -1,8 +1,15 @@
 import React, {Component, PropTypes} from 'react';
 import Stylin from './Stylin';
 
+const COLORS = [
+  '#f00',
+  '#0f0',
+  '#00f',
+];
+
 function randomColor () {
   return `rgb(${[0,1,2].map(channel => Math.round(Math.random()*255)).join(',')})`;
+  // return COLORS[Math.floor(Math.random()*COLORS.length)];
 }
 
 const NARROW_QUERY = '@media only screen and (max-width: 800px)';

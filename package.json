@@ -25,6 +25,7 @@
   "dependencies": {
     "babel-runtime": "^5.8.20",
     "deep-equal": "^1.0.0",
+    "immutable": "^3.7.4",
     "lodash.kebabcase": "^3.0.1",
     "react": "^0.14.0-beta3",
     "react-dom": "^0.14.0-beta3",
