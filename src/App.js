@@ -31,7 +31,7 @@ export default class App extends Component {
     return (
       <div>
         <div>
-          {count(100, (idx) => {
+          {count(3000, (idx) => {
             return <Button key={idx} />
           })}
         </div>

@@ -5,6 +5,8 @@ function randomColor () {
   return `rgb(${[0,1,2].map(channel => Math.round(Math.random()*255)).join(',')})`;
 }
 
+const NARROW_QUERY = '@media only screen and (max-width: 800px)';
+
 @Stylin
 class Button extends Component {
   static baseStyle = {
@@ -12,7 +14,7 @@ class Button extends Component {
     padding: '10px',
     margin: '5px',
     cursor: 'pointer',
-    '@media only screen and (max-width: 800px)': {
+    [NARROW_QUERY]: {
       margin: '5px 0',
       padding: '15px',
       width: '100%',
@@ -37,6 +39,11 @@ export default class ColorfulButton extends Component {
       backgroundColor: this.state.color,
       '&:hover': {
         backgroundColor: this.state.hoverColor,
+      },
+      [NARROW_QUERY]: {
+        '&:hover': {
+          backgroundColor: this.state.color,
+        },
       },
     }} onClick={() => {
       this.setState({
