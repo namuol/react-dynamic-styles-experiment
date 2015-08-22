@@ -28,9 +28,7 @@ class Button extends Component {
       width: '100%',
     },
     [REALLY_NARROW_QUERY]: {
-      padding: '40px',
-      fontWeight: 'bold',
-      fontSize: '200%',
+      padding: '10px',
     },
   };
 
@@ -48,7 +46,7 @@ export default class ColorfulButton extends Component {
   };
 
   render () {
-    return <Button style={{
+    return <Button style={[{
       backgroundColor: this.state.color,
       '&:hover': {
         backgroundColor: this.state.hoverColor,
@@ -58,7 +56,10 @@ export default class ColorfulButton extends Component {
           backgroundColor: this.state.color,
         },
       },
-    }} onClick={() => {
+      [REALLY_NARROW_QUERY]: {
+        padding: '100px',
+      },
+    }, this.props.style]} onClick={() => {
       this.setState({
         color: randomColor(),
         hoverColor: randomColor(),

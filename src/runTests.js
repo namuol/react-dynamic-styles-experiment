@@ -21,12 +21,19 @@ export default function runTests ({funcName, func, tests, expandArguments=false}
       result = result.toJS();
     }
 
-    if (!equal(result, expected)) {
+    if (isFunc(expected)) {
+      let newErrors = expected(result) || [];
+      if (Array.isArray(newErrors)) {
+        errorMsgs.push(...newErrors);
+      } else {
+        errorMsgs.push(newErrors);
+      }
+    } else if (!equal(result, expected)) {
       errorMsgs.push(`${funcName} test #${testNum}:\nExpected ${pretty(expected)}\nbut got ${pretty(result)}`);
     }
   });
 
   if (errorMsgs.length > 0) {
-    throw new Error(errorMsgs.join('\n\n'));
+    throw new Error('\n' + errorMsgs.join('\n\n'));
   }
 }

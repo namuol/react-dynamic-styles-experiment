@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import Button from './Button';
 
-
 function count (max, mapFunc) {
   let result = [];
   let total = 0;
@@ -17,8 +16,8 @@ export default class App extends Component {
     return (
       <div>
         <div>
-          {count(3000, (idx) => {
-            return <Button key={idx} />
+          {count(10, (idx) => {
+            return <Button key={idx} style={idx > 10 && {display: 'none'}} />
           })}
         </div>
       </div>

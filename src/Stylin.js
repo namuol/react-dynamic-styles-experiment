@@ -15,11 +15,12 @@ function findIndex (arr, val) {
 
 let styleCounts = {};
 let styleRules = {};
+let rulesMirror = [];
 
 export default function Stylin (Component) {
   return class StylinComponent extends Component {
     static propTypes = Object.assign({
-      style: PropTypes.object,
+      style: PropTypes.array,
     }, Component.propTypes);
 
     __removeStyles () {
@@ -33,14 +34,19 @@ export default function Stylin (Component) {
 
         const rules = styleRules[this.__className];
 
-        let first = findIndex(document.styleSheets[0].rules, rules[0]);
+        let first = rulesMirror.indexOf(rules[0]);
         const last = first + rules.length-1;
         let idx = last;
 
+        root.style.display = 'none';
         while (idx >= first) {
           document.styleSheets[0].deleteRule(idx);
           idx -= 1;
         }
+        
+        rulesMirror.splice(first, (last-first) + 1);
+
+        root.style.display = 'block';
         
         delete this.__className;
       }
@@ -50,20 +56,28 @@ export default function Stylin (Component) {
       this.__removeStyles();
 
       if (!!props.style) {
-        const style = merge([Component.baseStyle||{}, props.style]);
-        this.__className = hashStyle(style);
+        const styleList = [Component.baseStyle||{}, ...props.style];
+        const styles = merge(styleList);
+
+        this.__className = hashStyle(styles);
         const styleCount = styleCounts[this.__className] || 0;
         styleCounts[this.__className] = styleCount + 1;
         
+
         if (styleCount > 0) {
           return;
         }
 
-        const rules  = styleToRuleStrings(style, '.' + this.__className);
+        const rules = styleToRuleStrings(styles, '.'+this.__className);
+
+        root.style.display = 'none';
         styleRules[this.__className] = rules.map((rule) => {
           const idx = document.styleSheets[0].insertRule(rule, document.styleSheets[0].rules.length);
-          return document.styleSheets[0].rules[idx];
+          const ruleObj = document.styleSheets[0].rules[idx];
+          rulesMirror.push(ruleObj);
+          return ruleObj;
         });
+        root.style.display = 'block';
       }
     }
     
