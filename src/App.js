@@ -16,8 +16,8 @@ export default class App extends Component {
     return (
       <div>
         <div>
-          {count(10, (idx) => {
-            return <Button key={idx} style={idx > 10 && {display: 'none'}} />
+          {count(3000, (idx) => {
+            return <Button key={idx} />
           })}
         </div>
       </div>
