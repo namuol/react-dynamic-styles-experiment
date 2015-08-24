@@ -13,6 +13,8 @@ function findIndex (arr, val) {
   return -1;
 }
 
+const styleSheet = document.styleSheets[0];
+
 let __rulesMirror = [];
 
 function findRuleIndex (rule) {
@@ -24,40 +26,68 @@ let __rulesToDelete = [];
 
 function __insertRule (rule) {
   __rulesMirror.push(rule);
-  return document.styleSheets[0].insertRule(rule, document.styleSheets[0].rules.length);
+  styleSheet.insertRule(rule, styleSheet.rules.length);
+  // console.log(`inserting rule ${rule}`);
 }
 
 function __deleteRule (idx) {
-  __rulesMirror.splice(idx, 1);
-  return document.styleSheets[0].deleteRule(idx);
+  const [rule] = __rulesMirror.splice(idx, 1);
+  styleSheet.deleteRule(idx);
+  // console.log(`delete rule ${rule}`);
+}
+
+function __deleteRuleSet (rules) {
+  const firstIdx = findRuleIndex(rules[0]);
+
+  if (firstIdx < 0) {
+    const firstInsertIdx = __rulesToInsert.indexOf(rules[0]);
+    __rulesToInsert.splice(firstInsertIdx, rules.length);
+  } else {
+    const lastIdx = firstIdx + rules.length-1;
+    let idx = lastIdx;
+
+    while (idx >= firstIdx) {
+      __deleteRule(idx);
+      idx -= 1;
+    }
+  }
 }
 
 function flushRules () {
+  let mutated = false;
   if (__rulesToDelete.length > 0) {
-    __rulesToDelete.sort().reverse().forEach(__deleteRule);
+    __rulesToDelete.forEach((rules) => {
+      __deleteRuleSet(rules);
+    });
     __rulesToDelete = [];
+    mutated = true;
   }
 
   if (__rulesToInsert.length > 0) {
-    __rulesToInsert.forEach(__insertRule)
+    __rulesToInsert.filter(r => !!r).forEach(__insertRule)
     __rulesToInsert = [];
+    mutated = true;
   }
+  
+  if (mutated && __rulesMirror.length !== styleSheet.rules.length) {
+    console.error('rulesMirror length', __rulesMirror.length, ' ', 'actual count', styleSheet.rules.length);
+  }
+
   window.requestAnimationFrame(flushRules);
 }
 
 window.requestAnimationFrame(flushRules);
 
 function insertRule (rule) {
-  const addedLength = __rulesToInsert.push(rule);
-  document.styleSheets[0].rules.length + addedLength - 1;
+  __rulesToInsert.push(rule);
 }
 
-function deleteRule (idx) {
-  __rulesToDelete.push(idx);
+function deleteRules (rules) {
+  __rulesToDelete.push(rules);
 }
 
-let styleCounts = {};
-let styleRules = {};
+const styleCounts = {};
+const rulesByClassName = {};
 
 export default function Stylin (Component) {
   return class StylinComponent extends Component {
@@ -74,18 +104,10 @@ export default function Stylin (Component) {
           return;
         }
 
-        const rules = styleRules[this.__className];
-
-        let first = findRuleIndex(rules[0]);
-        const last = first + rules.length-1;
-        let idx = last;
-
-        while (idx >= first) {
-          deleteRule(idx);
-          idx -= 1;
-        }
-        
+        const rules = rulesByClassName[this.__className];
+        deleteRules(rules);
         delete this.__className;
+        delete rulesByClassName[this.__className];
       }
     }
 
@@ -106,7 +128,7 @@ export default function Stylin (Component) {
 
         const rules = styleToRuleStrings(styles, '.'+this.__className);
         rules.forEach(insertRule);
-        styleRules[this.__className] = rules;
+        rulesByClassName[this.__className] = rules;
       }
     }
     

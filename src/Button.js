@@ -17,6 +17,10 @@ const REALLY_NARROW_QUERY = '@media only screen and (max-width: 400px)';
 
 @Stylin
 class Button extends Component {
+  static propTypes = {
+    blah: PropTypes.bool.isRequired,
+  };
+  
   static baseStyle = {
     border: 0,
     padding: '10px',
